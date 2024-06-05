@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Secure Password Generator | Create Strong Passwords Online</title>
-    <meta name="description" content="Use our free and secure password generator to create strong passwords online. Customize your passwords with uppercase, lowercase, numbers, and special characters.">
+    <meta name="description" content="Use our free and secure password generator to create strong passwords online. Customize your passwords with uppercase letters, lowercase letters, numbers, and special characters.">
     <meta name="keywords" content="password generator, strong password generator, secure passwords, create passwords online, free password generator">
     <style>
         body {
@@ -12,9 +12,11 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
             background: linear-gradient(135deg, #74ebd5 0%, #ACB6E5 100%);
+            padding: 20px;
+            box-sizing: border-box;
         }
         .container {
             background-color: #fff;
@@ -22,10 +24,12 @@
             border-radius: 10px;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
             text-align: center;
-            width: 300px;
+            width: 100%;
+            max-width: 400px;
+            box-sizing: border-box;
         }
         h1 {
-            font-size: 1.8em;
+            font-size: 2em;
             margin-bottom: 20px;
             color: #333;
         }
@@ -42,6 +46,7 @@
             margin-left: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
+            box-sizing: border-box;
         }
         .options label {
             display: block;
@@ -56,6 +61,7 @@
             cursor: pointer;
             font-size: 1em;
             transition: background-color 0.3s ease;
+            box-sizing: border-box;
         }
         button:hover {
             background-color: #45a049;
@@ -70,9 +76,50 @@
             white-space: pre-wrap;
             word-wrap: break-word;
             color: #333;
+            cursor: pointer;
+            box-sizing: border-box;
+            position: relative;
+        }
+        .password-output::after {
+            content: "Click to copy";
+            position: absolute;
+            right: 10px;
+            bottom: 10px;
+            font-size: 0.8em;
+            color: #777;
         }
         .ad-container {
             margin-top: 20px;
+        }
+        .tooltip {
+            visibility: hidden;
+            width: 120px;
+            background-color: #555;
+            color: #fff;
+            text-align: center;
+            border-radius: 5px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -60px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .tooltip::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #555 transparent transparent transparent;
+        }
+        .password-output:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
         }
     </style>
 </head>
@@ -93,7 +140,9 @@
         <label><input type="checkbox" id="special" checked> Include Special Characters</label>
     </div>
     <button onclick="generatePassword()">Generate Password</button>
-    <div class="password-output" id="passwordOutput"></div>
+    <div class="password-output" id="passwordOutput" onclick="copyPasswordToClipboard()">
+        <span class="tooltip" id="tooltip">Copied!</span>
+    </div>
     <div class="ad-container">
         <!-- Google AdSense Ad Code -->
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -132,7 +181,30 @@
             password += characters.charAt(Math.floor(Math.random() * characters.length));
         }
 
-        document.getElementById('passwordOutput').textContent = password;
+        const passwordOutput = document.getElementById('passwordOutput');
+        passwordOutput.textContent = password;
+
+        // Remove tooltip if present
+        const tooltip = document.getElementById('tooltip');
+        tooltip.style.visibility = 'hidden';
+        tooltip.style.opacity = '0';
+    }
+
+    function copyPasswordToClipboard() {
+        const passwordOutput = document.getElementById('passwordOutput');
+        const password = passwordOutput.textContent;
+
+        navigator.clipboard.writeText(password).then(() => {
+            const tooltip = document.getElementById('tooltip');
+            tooltip.style.visibility = 'visible';
+            tooltip.style.opacity = '1';
+
+            // Hide tooltip after 2 seconds
+            setTimeout(() => {
+                tooltip.style.visibility = 'hidden';
+                tooltip.style.opacity = '0';
+            }, 2000);
+        });
     }
 </script>
 
