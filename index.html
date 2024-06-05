@@ -6,6 +6,19 @@
     <title>Secure Password Generator | Create Strong Passwords Online</title>
     <meta name="description" content="Use our free and secure password generator to create strong passwords online. Customize your passwords with uppercase letters, lowercase letters, numbers, and special characters.">
     <meta name="keywords" content="password generator, strong password generator, secure passwords, create passwords online, free password generator">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Password Safely",
+      "url": "https://www.passwordsafely.com",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://www.passwordsafely.com/search?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -88,6 +101,13 @@
             font-size: 0.8em;
             color: #777;
         }
+        .password-visibility {
+            margin-top: 10px;
+        }
+        .password-strength {
+            margin-top: 10px;
+            font-weight: bold;
+        }
         .ad-container {
             margin-top: 20px;
         }
@@ -143,6 +163,11 @@
     <div class="password-output" id="passwordOutput" onclick="copyPasswordToClipboard()">
         <span class="tooltip" id="tooltip">Copied!</span>
     </div>
+    <div class="password-visibility">
+        <input type="checkbox" id="showPassword" onclick="togglePasswordVisibility()">
+        <label for="showPassword">Show Password</label>
+    </div>
+    <div class="password-strength" id="passwordStrength"></div>
     <div class="ad-container">
         <!-- Google AdSense Ad Code -->
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -188,6 +213,9 @@
         const tooltip = document.getElementById('tooltip');
         tooltip.style.visibility = 'hidden';
         tooltip.style.opacity = '0';
+
+        // Update password strength indicator
+        updatePasswordStrength(password);
     }
 
     function copyPasswordToClipboard() {
@@ -205,6 +233,31 @@
                 tooltip.style.opacity = '0';
             }, 2000);
         });
+    }
+
+    function togglePasswordVisibility() {
+        const passwordOutput = document.getElementById('passwordOutput');
+        const showPassword = document.getElementById('showPassword').checked;
+
+        if (showPassword) {
+            passwordOutput.style.webkitTextSecurity = 'none';
+        } else {
+            passwordOutput.style.webkitTextSecurity = 'disc';
+        }
+    }
+
+    function updatePasswordStrength(password) {
+        const strengthIndicator = document.getElementById('passwordStrength');
+        let strength = 'Weak';
+
+        if (password.length >= 12 && /[A-Z]/.test(password) && /[a-z]/.test(password) && /[0-9]/.test(password) && /[!@#$%^&*()_+~`|}{[\]:;?><,./-]/.test(password)) {
+            strength = 'Strong';
+        } else if (password.length >= 8 && (/[A-Z]/.test(password) || /[a-z]/.test(password)) && /[0-9]/.test(password)) {
+            strength = 'Medium';
+        }
+
+        strengthIndicator.textContent = `Strength: ${strength}`;
+        strengthIndicator.style.color = strength === 'Strong' ? 'green' : strength === 'Medium' ? 'orange' : 'red';
     }
 </script>
 
